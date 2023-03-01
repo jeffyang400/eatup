@@ -8,8 +8,13 @@ import express from 'express';
 import http from 'http';
 import typeDefs from './graphql/typeDefs';
 import resolvers from './graphql/resolvers';
+import * as dotenv from 'dotenv';
+import { getSession } from 'next-auth/react';
+import { PrismaClient } from '@prisma/client';
+import { GraphQLContext, Session } from './util/types';
 
 async function main() {
+    dotenv.config();
   // Required logic for integrating with Express
   const app = express();
   // Our httpServer handles incoming requests to our Express app.
@@ -22,12 +27,24 @@ async function main() {
     resolvers,
   });
 
+  const corsOptions = {
+    origin: process.env.CLIENT_ORIGIN,
+    credentials: true,
+  };
+
+  const prisma = new PrismaClient();
+
   // Same ApolloServer initialization as before, plus the drain plugin
   // for our httpServer.
   const server = new ApolloServer({
     schema,
     csrfPrevention: true,
     cache: 'bounded',
+    context: async ({req, res}): Promise<GraphQLContext> => {
+        const session = await getSession({req}) as Session
+        
+        return { session, prisma }
+    },
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
       ApolloServerPluginLandingPageLocalDefault({ embed: true }),
@@ -43,6 +60,7 @@ async function main() {
     // server root. However, *other* Apollo Server packages host it at
     // /graphql. Optionally provide this to match apollo-server.
     path: '/',
+    cors: corsOptions,
   });
 
   // Modified server startup
