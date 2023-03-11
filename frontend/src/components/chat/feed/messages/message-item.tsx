@@ -1,4 +1,4 @@
-import { Avatar, Flex, Stack, Text } from '@chakra-ui/react';
+import { Avatar, Box, Flex, Stack, Text } from '@chakra-ui/react';
 import { formatRelative } from 'date-fns';
 import enUS from 'date-fns/locale/en-US';
 import { MessagePopulated } from '../../../../../../backend/src/util/types';
@@ -9,8 +9,11 @@ interface MessageItemProps {
 }
 
 const formatRelativeLocale = {
-  lastWeek: ""
-}
+  lastWeek: "eeee 'at' p",
+  yesterday: "'Yesterday at' p",
+  today: 'p',
+  other: 'MM/dd/yy',
+};
 
 const MessageItem: React.FC<MessageItemProps> = ({ message, sentByMe }) => {
   return (
@@ -19,33 +22,42 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, sentByMe }) => {
       p={4}
       spacing={4}
       _hover={{ bg: 'grayAlpha.200' }}
+      justify={sentByMe ? 'flex-end' : 'flex-start'}
       wordBreak="break-word"
-      border="1px solid red"
     >
       {!sentByMe && (
         <Flex>
-          <Avatar size="sm" />
+        <Avatar size="sm" />
         </Flex>
       )}
       <Stack spacing={1} width="100%">
-        <Stack direction="row" align='center' justify={sentByMe ? "right" : "left"}>
-          {
-            !sentByMe && <Text fontWeight={500} textAlign='left'>{message.sender.username}</Text>
-          }
-          {/* <Text fontSize={14}>
-            {
-              formatRelative(message.createdAt, new Date(), {
-                locale: {
-                  ...enUS,
-                  formatRelative: (token) => {
-                    formatRelativeLocale[token as keyof typeof formatRelativeLocale]
-                  }
-                }
-              })
-            }
-          </Text> */}
-        <Text>{message.body}</Text>
+        <Stack
+          direction="row"
+          align="center"
+          justify={sentByMe ? 'flex-end' : 'flex-start'}
+        >
+          {!sentByMe && (
+            <Text fontWeight={500} textAlign="left">
+              {message.sender.username}
+            </Text>
+          )}
+          <Text fontSize={14}>
+            {formatRelative(message.createdAt, new Date(), {
+              locale: {
+                ...enUS,
+                formatRelative: (token) =>
+                  formatRelativeLocale[
+                    token as keyof typeof formatRelativeLocale
+                  ],
+              },
+            })}
+          </Text>
         </Stack>
+        <Flex justify={sentByMe ? 'flex-end' : 'flex-start'}>
+          <Box px={2} py={1} borderRadius={12} maxWidth="65%" bg={sentByMe ? 'blue.100' : "gray.100"}>
+            <Text>{message.body}</Text>
+          </Box>
+        </Flex>
       </Stack>
     </Stack>
   );

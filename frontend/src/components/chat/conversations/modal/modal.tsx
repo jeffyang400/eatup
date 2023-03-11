@@ -60,7 +60,7 @@ const ConversationModal: React.FC<ModalProps> = ({
 
   console.log('SEARCH DATA', data);
 
-  const onCreateConverstation = async () => {
+  const onCreateConversation = async () => {
     const participantIds = [...participants.map((p) => p.id), userId];
     try {
       const { data } = await createConversation({
@@ -146,7 +146,7 @@ const ConversationModal: React.FC<ModalProps> = ({
                   width="100%"
                   mt={6}
                   isLoading={createConversationLoading}
-                  onClick={onCreateConverstation}
+                  onClick={onCreateConversation}
                 >
                   Create Group
                 </Button>

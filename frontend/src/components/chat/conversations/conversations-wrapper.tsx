@@ -1,10 +1,13 @@
-import { useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery, useSubscription } from '@apollo/client';
 import { Box } from '@chakra-ui/react';
 import { Session } from 'next-auth';
 import ConversationList from './conversation-list';
 import ConversationOperations from '@/graphql/operations/conversation';
-import { ConversationsData } from '@/util/types';
-import { ConversationPopulated } from '../../../../../backend/src/util/types';
+import { ConversationsData, ConversationUpdatedData } from '@/util/types';
+import {
+  ConversationPopulated,
+  ParticipantPopulated,
+} from '../../../../../backend/src/util/types';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import SkeletonLoader from '@/components/common/skeleton-loader';
@@ -16,6 +19,12 @@ interface ConversationsWrapperProps {
 const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
   session,
 }) => {
+  const router = useRouter();
+  const { conversationId } = router.query;
+  const {
+    user: { id: userId },
+  } = session;
+
   const {
     data: conversationsData,
     error: conversationsError,
@@ -25,14 +34,94 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
     ConversationOperations.Queries.conversations
   );
 
-  const router = useRouter();
-  const { conversationId } = router.query;
+  const [markConversationAsRead] = useMutation<
+    { markConversationAsRead: boolean },
+    { userId: string; conversationId: string }
+  >(ConversationOperations.Mutations.markConversationAsRead);
 
-  const onViewConversation = async (conversationId: string) => {
+  useSubscription<ConversationUpdatedData, any>(
+    ConversationOperations.Subscriptions.conversationUpdated,
+    {
+      onData: ({ client, data }) => {
+        const { data: subscriptionData } = data;
+
+        console.log('ON DATA FIRING', subscriptionData);
+        if (!subscriptionData) return;
+
+        const {
+          conversationUpdated: {conversation: updatedConversation}
+        } = subscriptionData;
+        const currentlyViewingConversation =
+          updatedConversation.id === conversationId;
+        if (currentlyViewingConversation) {
+          onViewConversation(conversationId, false);
+        }
+      },
+    }
+  );
+
+  const onViewConversation = async (
+    conversationId: string,
+    hasSeenLatestMessage: boolean | undefined
+  ) => {
     // 1. Push conversationId to router query params
     router.push({ query: { conversationId } });
 
+    if (hasSeenLatestMessage) return;
     // 2. Update conversation to have seenLatestMessage = true
+
+    try {
+      await markConversationAsRead({
+        variables: { userId, conversationId },
+        optimisticResponse: { markConversationAsRead: true },
+        update: (cache) => {
+          const participantsFragment = cache.readFragment<{
+            participants: Array<ParticipantPopulated>;
+          }>({
+            id: `Conversation:${conversationId}`,
+            fragment: gql`
+              fragment Participants on Conversation {
+                participants {
+                  user {
+                    id
+                    username
+                  }
+                  hasSeenLatestMessage
+                }
+              }
+            `,
+          });
+          if (!participantsFragment) return;
+
+          const participants = [...participantsFragment.participants];
+          const userParticipantIdx = participants.findIndex(
+            (p) => p.user.id == userId
+          );
+
+          if (userParticipantIdx === -1) return;
+          const userParticipant = participants[userParticipantIdx];
+
+          participants[userParticipantIdx] = {
+            ...userParticipant,
+            hasSeenLatestMessage: true,
+          };
+
+          cache.writeFragment({
+            id: `Conversation:${conversationId}`,
+            fragment: gql`
+              fragment UpdatedParticipant on Conversation {
+                participants
+              }
+            `,
+            data: {
+              participants,
+            },
+          });
+        },
+      });
+    } catch (error: any) {
+      console.log('onViewConversation error: ', error);
+    }
   };
 
   const subscribetoNewConversations = () => {

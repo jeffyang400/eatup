@@ -29,9 +29,6 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
     },
   });
 
-  if (error) {
-    return null;
-  }
 
   async function subscribeToMoreMessages(conversationId: string) {
     subscribeToMore({
@@ -47,7 +44,10 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
         const newMessage = subscriptionData.data.messageSent;
 
         return Object.assign({}, prev, {
-          messages: [newMessage, ...prev.messages],
+          messages:
+            newMessage.sender.id === userId
+              ? prev.messages
+              : [newMessage, ...prev.messages],
         });
       },
     });
@@ -56,6 +56,10 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
   useEffect(() => {
     subscribeToMoreMessages(conversationId);
   }, [conversationId]);
+
+  if (error) {
+    return null;
+  }
 
   console.log('Messages DATA', data);
 
