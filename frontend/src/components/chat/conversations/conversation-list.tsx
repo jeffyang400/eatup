@@ -1,10 +1,14 @@
-import { Box, Text } from '@chakra-ui/react';
+import { useMutation } from '@apollo/client';
+import { Box, Button, Text } from '@chakra-ui/react';
 import { Session } from 'next-auth';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { ConversationPopulated } from '../../../../../backend/src/util/types';
 import ConversationItem from './conversation-item';
 import ConversationModal from './modal/modal';
+import ConversationOperations from '@/graphql/operations/conversation';
+import { toast } from 'react-hot-toast';
+import { signOut } from 'next-auth/react';
 
 interface ConversationListProps {
   session: Session;
@@ -21,6 +25,10 @@ const ConversationList: React.FC<ConversationListProps> = ({
   onViewConversation,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [deleteConversation] = useMutation<{
+    deletedConversation: boolean;
+    conversationId: string;
+  }>(ConversationOperations.Mutations.deleteConversation);
 
   const onOpen = () => setIsOpen(true);
   const onClose = () => setIsOpen(false);
@@ -30,13 +38,36 @@ const ConversationList: React.FC<ConversationListProps> = ({
     user: { id: userId },
   } = session;
 
+  async function onDeleteConversation(conversationId: string) {
+    try {
+      toast.promise(
+        deleteConversation({
+          variables: { conversationId },
+          update: () => {
+            router.replace(
+              typeof process.env.NEXT_PUBLIC_BASE_URL === 'string'
+                ? process.env.NEXT_PUBLIC_BASE_URL
+                : ''
+            );
+          },
+        }),
+        {
+          loading: 'Deleting Group',
+          success: 'Group Deleted',
+          error: 'Delete Failed',
+        }
+      );
+    } catch (error) {
+      console.log('onDeleteConversation error: ', error);
+    }
+  }
+
   const sortedConversations = [...conversations].sort(
     (a, b) => b.updatedAt.valueOf() - a.updatedAt.valueOf()
   );
-  console.log('sorted convos: ', sortedConversations);
 
   return (
-    <Box width="100%">
+    <Box width="100%" position="relative" height="100%" overflow="hidden">
       <Box
         py={2}
         px={4}
@@ -66,10 +97,15 @@ const ConversationList: React.FC<ConversationListProps> = ({
             }}
             isSelected={conversation.id === router.query.conversationId}
             hasSeenLatestMessage={participant?.hasSeenLatestMessage}
-            onDeleteConversation={() => {}}
+            onDeleteConversation={onDeleteConversation}
           />
         );
       })}
+      <Box position="absolute" bottom={0} left={0} width="100%" px={8}>
+        <Button width="100%" onClick={() => signOut()}>
+          Sign Out
+        </Button>
+      </Box>
     </Box>
   );
 };

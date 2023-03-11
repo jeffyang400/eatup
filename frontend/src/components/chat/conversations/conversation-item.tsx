@@ -58,10 +58,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       event.preventDefault();
       setMenuOpen(true);
     }
-  };
-
-  console.log(conversation);
-  
+  };  
 
   return (
     <Stack
@@ -79,7 +76,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
     >
       <Menu isOpen={menuOpen} onClose={() => setMenuOpen(false)}>
         <MenuList bg="#2d2d2d">
-          <MenuItem
+          {/* <MenuItem
             icon={<AiOutlineEdit fontSize={20} />}
             onClick={(event) => {
               event.stopPropagation();
@@ -89,7 +86,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
             _hover={{ bg: "whiteAlpha.300" }}
           >
             Edit
-          </MenuItem>
+          </MenuItem> */}
           <MenuItem
             icon={<MdDeleteOutline fontSize={20} />}
             onClick={(event) => {

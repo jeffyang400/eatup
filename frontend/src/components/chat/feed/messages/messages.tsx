@@ -29,9 +29,8 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
     },
   });
 
-
-  async function subscribeToMoreMessages(conversationId: string) {
-    subscribeToMore({
+  function subscribeToMoreMessages(conversationId: string) {
+    return subscribeToMore({
       document: MessageOperations.Subscription.messageSent,
       variables: {
         conversationId,
@@ -54,7 +53,9 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
   }
 
   useEffect(() => {
-    subscribeToMoreMessages(conversationId);
+    const unsubscribe = subscribeToMoreMessages(conversationId);
+
+    return () => unsubscribe();
   }, [conversationId]);
 
   if (error) {

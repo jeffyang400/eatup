@@ -3,7 +3,11 @@ import { Box } from '@chakra-ui/react';
 import { Session } from 'next-auth';
 import ConversationList from './conversation-list';
 import ConversationOperations from '@/graphql/operations/conversation';
-import { ConversationsData, ConversationUpdatedData } from '@/util/types';
+import {
+  ConversationDeletedData,
+  ConversationsData,
+  ConversationUpdatedData,
+} from '@/util/types';
 import {
   ConversationPopulated,
   ParticipantPopulated,
@@ -45,17 +49,48 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
       onData: ({ client, data }) => {
         const { data: subscriptionData } = data;
 
-        console.log('ON DATA FIRING', subscriptionData);
         if (!subscriptionData) return;
 
         const {
-          conversationUpdated: {conversation: updatedConversation}
+          conversationUpdated: { conversation: updatedConversation },
         } = subscriptionData;
         const currentlyViewingConversation =
           updatedConversation.id === conversationId;
         if (currentlyViewingConversation) {
           onViewConversation(conversationId, false);
         }
+      },
+    }
+  );
+
+  useSubscription<ConversationDeletedData, any>(
+    ConversationOperations.Subscriptions.conversationDeleted,
+    {
+      onData: ({ client, data }) => {
+        console.log('SUB data: ', data);
+        const { data: subscriptionData } = data;
+        if (!subscriptionData) return;
+
+        const existing = client.readQuery<ConversationsData>({
+          query: ConversationOperations.Queries.conversations,
+        });
+
+        if (!existing) return;
+
+        const { conversations } = existing;
+        const {
+          conversationDeleted: { id: deletedConversationId },
+        } = subscriptionData;
+
+        client.writeQuery<ConversationsData>({
+          query: ConversationOperations.Queries.conversations,
+          data: {
+            conversations: conversations.filter(
+              (c) => c.id !== deletedConversationId
+            ),
+          },
+        });
+        router.push('/')
       },
     }
   );
