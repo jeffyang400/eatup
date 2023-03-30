@@ -1,3 +1,4 @@
+import Navbar from '@/components/common/navbar';
 import { client } from '@/graphql/apollo-client';
 import { ApolloProvider } from '@apollo/client';
 import { ChakraProvider } from '@chakra-ui/react';
@@ -14,6 +15,7 @@ export default function App({
     <ApolloProvider client={client}>
       <SessionProvider session={session}>
         <ChakraProvider theme={theme}>
+          <Navbar />
           <Component {...pageProps} />
           <Toaster />
         </ChakraProvider>

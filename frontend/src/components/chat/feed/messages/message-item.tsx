@@ -25,11 +25,6 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, sentByMe }) => {
       justify={sentByMe ? 'flex-end' : 'flex-start'}
       wordBreak="break-word"
     >
-      {!sentByMe && (
-        <Flex>
-        <Avatar size="sm" />
-        </Flex>
-      )}
       <Stack spacing={1} width="100%">
         <Stack
           direction="row"

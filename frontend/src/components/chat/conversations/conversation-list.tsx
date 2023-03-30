@@ -77,7 +77,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
         cursor="pointer"
         onClick={onOpen}
       >
-        <Text textAlign="center">Find or start a conversation</Text>
+        <Text textAlign="center">Create Group</Text>
       </Box>
       <ConversationModal isOpen={isOpen} onClose={onClose} session={session} />
       {sortedConversations.map((conversation) => {

@@ -49,10 +49,10 @@ const MessagesHeader: React.FC<MessagesHeaderProps> = ({
       {!conversation && !loading && <Text>Conversation Not Found</Text>}
       {conversation && (
         <Stack direction="row">
-          <Text>To: </Text>
           <Text fontWeight={600}>
             {formatUsernames(conversation.participants, userId)}
           </Text>
+          <Text>{conversation.participants.length} Members</Text>
         </Stack>
       )}
     </Stack>

@@ -83,7 +83,6 @@ const resolvers = {
         /**
          * Create new message entity
          */
-
         const newMessage = await prisma.message.create({
           data: {
             id: messageId,
@@ -93,6 +92,8 @@ const resolvers = {
           },
           include: messagePopulated,
         });
+        
+        pubsub.publish('MESSAGE_SENT', { messageSent: newMessage });
 
         /**
          * Find ConversationParticipant entity
@@ -141,7 +142,7 @@ const resolvers = {
           include: conversationPopulated,
         });
 
-        pubsub.publish('MESSAGE_SENT', { messageSent: newMessage });
+        // pubsub.publish('MESSAGE_SENT', { messageSent: newMessage });
         pubsub.publish('CONVERSATION_UPDATED', {
           conversationUpdated: { conversation },
         });

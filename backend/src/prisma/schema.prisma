@@ -45,6 +45,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  reviews       Review[]
 }
 
 model VerificationToken {
@@ -83,8 +84,40 @@ model Message {
   conversation   Conversation  @relation(fields: [conversationId], references: [id])
   senderId       String        @db.ObjectId
   sender         User          @relation(fields: [senderId], references: [id])
-  body           String         
+  body           String
   isLatestIn     Conversation? @relation(name: "latestConversationMessage")
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
+}
+
+model Restaurant {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  business_id  String
+  name         String
+  address      String
+  city         String
+  state        String
+  postal_code  Int
+  latitude     Float
+  longitude    Float
+  stars        Float
+  review_count Int
+  is_open      Int
+  attributes   String
+  categories   String
+  hours        String
+  eatup_rating Float?
+  reviews      Review[]
+}
+
+model Review {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  content      String
+  rating       Float
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String     @db.ObjectId
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId String     @db.ObjectId
 }
