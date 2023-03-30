@@ -1,32 +1,56 @@
 import preprocessing_func as pf
-import model as m
+import pickle as pkl
 
-restDF = pf.pd.read_csv('restaurant_CA.csv')
-reviewDF = pf.pd.read_csv('review_CA.csv')
-userDF = pf.pd.read_csv('user_CA.csv')
+'''
+This is a test file for the recommendation model
+Remember to change the path to the csv file and the pickle file if you want to run this file
+Change the input to whatever you want to test
+'''
 
-reviewDF= reviewDF.drop('Unnamed: 0', axis=1)
+reviewDF_path = 'review_CA.csv'
 
-with open('yelp_recommendation_model_8.pkl', 'rb') as file:
-    P = pf.pickle.load(file)
-    Q = pf.pickle.load(file)
-    userid_vectorizer = pf.pickle.load(file)
 
-words = "A restaurant with a nice view of the bay"
-test_df= pf.pd.DataFrame([words], columns=['text'])
-test_df['text'] = test_df['text'].apply(pf.clean_text)
-test_vectors = userid_vectorizer.transform(test_df['text'])
-test_v_df = pf.pd.DataFrame(test_vectors.toarray(), index=test_df.index, columns=userid_vectorizer.get_feature_names_out())
+reviewDF = pf.pd.read_csv(reviewDF_path)
+input = "A restaurant with a nice view of the bay"
 
-predictItemRating = pf.pd.DataFrame(np.dot(test_v_df.loc[0],Q.T),index=Q.index,columns=['Rating'])
-topRecommendations = pf.pd.DataFrame.sort_values(predictItemRating,['Rating'],ascending=[0])[:5]
+def res_recommend(input, reviewDF):
+    '''
+    This function takes in a string input and a dataframe of reviews
+    Output is a dataframe of top 5 recommendations
+    To ultilize the output, you need to use the index of the dataframe to get the business_id Example: topRecommendations.index
+    '''
+    
+    pickle_path = 'eatUp_full_set_recommendation.pkl'
+    
+    if 'Unnamed: 0' in reviewDF.columns:
+        reviewDF= reviewDF.drop('Unnamed: 0', axis=1)
 
-for i in topRecommendations.index:
-    if i in restDF['business_id'].values:
-      name = restDF[restDF['business_id'] == i]['name'].iloc[0]
-      categories = restDF[restDF['business_id'] == i]['categories'].iloc[0]
-      stars = str(restDF[restDF['business_id']==i]['stars'].iloc[0])
-      rating = topRecommendations.loc[i, 'Rating']
-      
-      print(f'Name: {name}\nCategories: {categories}\nStars: {stars}\nRecommendation rating: {rating}\n')
-      print('')
+    with open(pickle_path, 'rb') as file:
+        P = pkl.load(file)
+        Q = pkl.load(file)
+        userid_vectorizer = pkl.load(file)
+
+    test_df= pf.pd.DataFrame([input], columns=['text'])
+    test_df['text'] = test_df['text'].apply(pf.clean_text)
+    test_vectors = userid_vectorizer.transform(test_df['text'])
+    test_v_df = pf.pd.DataFrame(test_vectors.toarray(), index=test_df.index, columns=userid_vectorizer.get_feature_names_out())
+
+    predictItemRating = pf.pd.DataFrame(pf.np.dot(test_v_df.loc[0],Q.T),index=Q.index,columns=['Rating'])
+    topRecommendations = pf.pd.DataFrame.sort_values(predictItemRating,['Rating'],ascending=[0])[:5]
+    '''
+    This part is to print out the top 5 recommendations
+    If you want to print out the top 5 recommendations, uncomment this part
+    Please include restDF as an argument in the function to use this part
+    
+    
+    for i in topRecommendations.index:
+        if i in restDF['business_id'].values:
+            name = restDF[restDF['business_id'] == i]['name'].iloc[0]
+            categories = restDF[restDF['business_id'] == i]['categories'].iloc[0]
+            stars = str(restDF[restDF['business_id']==i]['stars'].iloc[0])
+            rating = topRecommendations.loc[i, 'Rating']
+            
+            print(f'Name: {name}\nCategories: {categories}\nStars: {stars}\nRecommendation rating: {rating}\n')
+            print('')
+    '''
+    return topRecommendations
