@@ -62,8 +62,6 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
     return null;
   }
 
-  console.log('Messages DATA', data);
-
   return (
     <Flex direction="column" justify="flex-end" overflow="hidden">
       {loading && (
@@ -74,13 +72,30 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
       )}
       {data?.messages && (
         <Flex direction="column-reverse" overflowY="scroll" height="100%">
-          {data.messages.map((m) => (
-            <MessageItem
-              key={m.id}
-              message={m}
-              sentByMe={m.sender.id === userId}
-            />
-          ))}
+          {data.messages.map((m, idx) => {
+            let renderHeader = true;
+
+            if (idx < data.messages.length-1) {
+              const prevMsg = data.messages[idx + 1];
+              const curDate = new Date(m.createdAt);
+              const prevDate = new Date(prevMsg.createdAt);
+              if (
+                curDate.getTime() - prevDate.getTime() < 6000 &&
+                m.sender.id === prevMsg.sender.id
+              ) {
+                renderHeader = false;
+              }
+            }
+
+            return (
+              <MessageItem
+                key={m.id}
+                message={m}
+                sentByMe={m.sender.id === userId}
+                renderHeader={renderHeader}
+              />
+            );
+          })}
         </Flex>
       )}
     </Flex>

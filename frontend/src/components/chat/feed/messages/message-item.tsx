@@ -2,10 +2,12 @@ import { Avatar, Box, Flex, Stack, Text } from '@chakra-ui/react';
 import { formatRelative } from 'date-fns';
 import enUS from 'date-fns/locale/en-US';
 import { MessagePopulated } from '../../../../../../backend/src/util/types';
+import styles from '../../../../styles/message-item.module.css';
 
 interface MessageItemProps {
   message: MessagePopulated;
   sentByMe: boolean;
+  renderHeader: boolean;
 }
 
 const formatRelativeLocale = {
@@ -15,46 +17,55 @@ const formatRelativeLocale = {
   other: 'MM/dd/yy',
 };
 
-const MessageItem: React.FC<MessageItemProps> = ({ message, sentByMe }) => {
+const MessageItem: React.FC<MessageItemProps> = ({
+  message,
+  sentByMe,
+  renderHeader,
+}) => {
   return (
-    <Stack
-      direction="row"
-      p={4}
-      spacing={4}
-      _hover={{ bg: 'grayAlpha.200' }}
-      justify={sentByMe ? 'flex-end' : 'flex-start'}
-      wordBreak="break-word"
-    >
-      <Stack spacing={1} width="100%">
-        <Stack
-          direction="row"
-          align="center"
-          justify={sentByMe ? 'flex-end' : 'flex-start'}
-        >
-          {!sentByMe && (
-            <Text fontWeight={500} textAlign="left">
-              {message.sender.username}
-            </Text>
-          )}
-          <Text fontSize={14}>
-            {formatRelative(message.createdAt, new Date(), {
-              locale: {
-                ...enUS,
-                formatRelative: (token) =>
-                  formatRelativeLocale[
-                    token as keyof typeof formatRelativeLocale
-                  ],
-              },
-            })}
-          </Text>
-        </Stack>
-        <Flex justify={sentByMe ? 'flex-end' : 'flex-start'}>
-          <Box px={2} py={1} borderRadius={12} maxWidth="65%" bg={sentByMe ? 'blue.100' : "gray.100"}>
-            <Text>{message.body}</Text>
-          </Box>
-        </Flex>
-      </Stack>
-    </Stack>
+    <div className={`${styles.container} ${sentByMe ? styles.sentByMe : ''}`} style={renderHeader ? {paddingTop: '0.5em'} : {}}>
+      <div className={styles.messageContainer}>
+        {renderHeader && (
+          <div
+            className={
+              styles.messageHeader +
+              (sentByMe ? ' ' + styles.messageHeaderSentByMe : '')
+            }
+          >
+            {!sentByMe && (
+              <div className={styles.messageHeaderSender}>
+                {message.sender.username}
+              </div>
+            )}
+            <div className={styles.messageHeaderTime}>
+              <span>
+                {formatRelative(message.createdAt, new Date(), {
+                  locale: {
+                    ...enUS,
+                    formatRelative: (token) =>
+                      formatRelativeLocale[
+                        token as keyof typeof formatRelativeLocale
+                      ],
+                  },
+                })}
+              </span>
+            </div>
+          </div>
+        )}
+        <div className={styles.messageBody}>
+          <div
+            className={[
+              styles.messageBubble,
+              sentByMe
+                ? styles.messageBubbleSentByMe
+                : styles.messageBubbleSentByOther,
+            ].join(' ')}
+          >
+            <span>{message.body}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

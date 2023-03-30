@@ -27,7 +27,7 @@ export default function Home() {
         Welcome to Eatup
       </Text>
       <div>
-        {data.restaurants.map((r: any, idx: any) => (
+        {data?.restaurants.map((r: any, idx: any) => (
           <div key={idx}>{r.name}</div>
         ))}
       </div>
