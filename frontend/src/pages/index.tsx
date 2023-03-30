@@ -6,6 +6,8 @@ import Auth from '../components/auth';
 import { Session } from 'next-auth';
 import RestaurantOperations from '@/graphql/operations/restaurant';
 import { useQuery } from '@apollo/client';
+import styles from '../styles/restaurants-card.module.css';
+import RestaurantCard from '@/components/restaurant/restaurant-card';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -22,14 +24,9 @@ export default function Home() {
   };
 
   return (
-    <Flex justify="center" py={20}>
-      <Text fontWeight={600} fontSize="3em">
-        Welcome to Eatup
-      </Text>
+    <Flex justify="center" py={20} flexDirection="column">
       <div>
-        {data?.restaurants.map((r: any, idx: any) => (
-          <div key={idx}>{r.name}</div>
-        ))}
+        <RestaurantCard restaurants={data?.restaurants} />
       </div>
     </Flex>
   );
