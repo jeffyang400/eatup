@@ -10,16 +10,9 @@ interface ChatProps {
 
 const Chat: React.FC<ChatProps> = ({ session }) => {
   return (
-    <Flex height="100vh">
+    <Flex height="95vh">
       <ConversationsWrapper session={session}/>
       <FeedWrapper session={session}/>
-      {/* <Button
-        onClick={() => {
-          signOut();
-        }}
-      >
-        Logout
-      </Button> */}
     </Flex>
   );
 };

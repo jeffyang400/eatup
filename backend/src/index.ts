@@ -8,13 +8,14 @@ import typeDefs from './graphql/typeDefs';
 import resolvers from './graphql/resolvers';
 import * as dotenv from 'dotenv';
 import { getSession } from 'next-auth/react';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import { PubSub } from 'graphql-subscriptions';
 import { GraphQLContext, Session, SubscriptionContext } from './util/types';
 import { WebSocketServer } from 'ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { json } from 'body-parser';
 import cors from 'cors';
+import { ISODateString } from 'next-auth';
 
 async function main() {
   dotenv.config();
@@ -56,7 +57,6 @@ async function main() {
     wsServer
   );
 
-
   // Same ApolloServer initialization as before, plus the drain plugin
   // for our httpServer.
   const server = new ApolloServer({
@@ -86,19 +86,26 @@ async function main() {
     origin: process.env.CLIENT_ORIGIN,
     credentials: true,
   };
-  
+
+  const mockSession = {
+    user: {
+      id: 'user-id',
+    } as User,
+    expires: '2021-01-01' as ISODateString,
+  };
+
   app.use(
-    "/graphql",
+    '/graphql',
     cors<cors.CorsRequest>(corsOptions),
     json(),
     expressMiddleware(server, {
       context: async ({ req }): Promise<GraphQLContext> => {
         const session = await getSession({ req });
 
-        return { session: session as Session, prisma, pubsub };
+        return { session: (session ?? mockSession) as Session, prisma, pubsub };
       },
     })
-  )
+  );
 
   const PORT = 4000;
 

@@ -1,14 +1,20 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { NextPageContext } from 'next';
 import { getSession, signIn, signOut, useSession } from 'next-auth/react';
 import Chat from '../components/chat';
 import Auth from '../components/auth';
 import { Session } from 'next-auth';
+import RestaurantOperations from '@/graphql/operations/restaurant';
+import { useQuery } from '@apollo/client';
 
 export default function Home() {
   const { data: session } = useSession();
 
-  console.log('session: ', session);
+  const { data, error, loading } = useQuery(
+    RestaurantOperations.Queries.restaurants
+  );
+
+  console.log('restaurant data', data);
 
   const reloadSession = async () => {
     const event = new Event('visibilitychange');
@@ -16,13 +22,16 @@ export default function Home() {
   };
 
   return (
-    <Box>
-      {session?.user?.username ? (
-        <Chat session={session}/>
-      ) : (
-        <Auth session={session} reloadSession={reloadSession} />
-      )}
-    </Box>
+    <Flex justify="center" py={20}>
+      <Text fontWeight={600} fontSize="3em">
+        Welcome to Eatup
+      </Text>
+      <div>
+        {data.restaurants.map((r: any, idx: any) => (
+          <div key={idx}>{r.name}</div>
+        ))}
+      </div>
+    </Flex>
   );
 }
 
