@@ -12,6 +12,7 @@ const RestaurantFields = `
   categories
   hours
   eatup_rating
+  stars
 `;
 
 const RestaurantOperations = {
