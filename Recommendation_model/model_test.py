@@ -3,28 +3,21 @@ import pickle as pkl
 
 '''
 This is a test file for the recommendation model
-Remember to change the path to the csv file and the pickle file if you want to run this file
+Remember to change the path to the pickle file if you want to run this file
 Change the input to whatever you want to test
 '''
 
-reviewDF_path = 'review_CA.csv'
-
-
-reviewDF = pf.pd.read_csv(reviewDF_path)
 input = "A restaurant with a nice view of the bay"
 
-def res_recommend(input, reviewDF):
+def res_recommend(input):
     '''
-    This function takes in a string input and a dataframe of reviews
-    Output is a dataframe of top 5 recommendations
+    Input:  A string input that describes the user's preference
+    Output: A dataframe of top 5 recommendations
     To ultilize the output, you need to use the index of the dataframe to get the business_id Example: topRecommendations.index
     '''
     
     pickle_path = 'eatUp_full_set_recommendation.pkl'
     
-    if 'Unnamed: 0' in reviewDF.columns:
-        reviewDF= reviewDF.drop('Unnamed: 0', axis=1)
-
     with open(pickle_path, 'rb') as file:
         P = pkl.load(file)
         Q = pkl.load(file)
@@ -54,3 +47,4 @@ def res_recommend(input, reviewDF):
             print('')
     '''
     return topRecommendations
+
