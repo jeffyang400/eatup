@@ -12,15 +12,30 @@ import {
 import Link from 'next/link';
 import { FiMenu } from 'react-icons/fi';
 import { signIn, signOut, useSession } from 'next-auth/react';
+import Image from 'next/image';
 
 export default function Navbar() {
   const { data: session } = useSession();
   return (
-    <Box as="section" height="5vh" borderBottom="1px solid #e8e8e8" px={50} alignItems="center">
+    <Box
+      as="section"
+      height="5vh"
+      borderBottom="1px solid #e8e8e8"
+      px={50}
+      alignItems="center"
+      backgroundColor="#faf2e4"
+    >
       <HStack height="5vh" spacing="10" justify="space-between">
         <Flex justify="space-between" flex="1">
           <HStack spacing="8">
-            <Link href="/">Eatup</Link>
+            <Link href="/">
+              <Image
+                src="/images/logo.png"
+                alt="Logo"
+                width={100}
+                height={50}
+              />
+            </Link>
             <Link href="/chats">Chats</Link>
           </HStack>
           <HStack spacing="3">
