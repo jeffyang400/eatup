@@ -9,20 +9,13 @@ Change the input to whatever you want to test
 
 input = "A restaurant with a nice view of the bay"
 
-def res_recommend(input):
+def res_recommend(input, P, Q, userid_vectorizer):
     '''
     Input:  A string input that describes the user's preference
     Output: A dataframe of top 5 recommendations
     To ultilize the output, you need to use the index of the dataframe to get the business_id Example: topRecommendations.index
     '''
     
-    pickle_path = 'eatUp_full_set_recommendation.pkl'
-    
-    with open(pickle_path, 'rb') as file:
-        P = pkl.load(file)
-        Q = pkl.load(file)
-        userid_vectorizer = pkl.load(file)
-
     test_df= pf.pd.DataFrame([input], columns=['text'])
     test_df['text'] = test_df['text'].apply(pf.clean_text)
     test_vectors = userid_vectorizer.transform(test_df['text'])
@@ -47,4 +40,3 @@ def res_recommend(input):
             print('')
     '''
     return topRecommendations
-

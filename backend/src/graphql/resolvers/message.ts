@@ -9,6 +9,7 @@ import {
 } from '../../util/types';
 import { userIsConversationParticipant } from '../../util/functions';
 import { conversationPopulated } from './conversation';
+import axios from 'axios';
 
 const resolvers = {
   Query: {
@@ -17,7 +18,7 @@ const resolvers = {
       args: { conversationId: string },
       context: GraphQLContext
     ): Promise<Array<MessagePopulated>> => {
-      const { session, prisma } = context;
+      const { session, prisma, pubsub } = context;
       const { conversationId } = args;
 
       if (!session?.user) {
@@ -53,6 +54,35 @@ const resolvers = {
             createdAt: 'desc',
           },
         });
+
+        if (messages.length > 0) {
+          const recommendationInput = messages
+            .map((message) => message.body)
+            .join(' ');
+          console.log(recommendationInput);
+          const {
+            data: { businessIds },
+          } = await axios.post('http://127.0.0.1:5000/recommend', {
+            input_text: recommendationInput,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          const restaurants = await prisma.restaurant.findMany({
+            where: {
+              business_id: {
+                in: businessIds,
+              },
+            },
+          });
+
+          pubsub.publish('RESTAURANTS_RECOMMENDED', {
+            restaurantsRecommended: restaurants,
+            conversationId,
+          });
+        }
+
         return messages;
       } catch (error: any) {
         console.log('Messages error:', error);
@@ -92,8 +122,40 @@ const resolvers = {
           },
           include: messagePopulated,
         });
-        
+
         pubsub.publish('MESSAGE_SENT', { messageSent: newMessage });
+
+        const messages = await prisma.message.findMany({
+          where: {
+            conversationId,
+          },
+        });
+
+        const recommendationInput = messages
+          .map((message) => message.body)
+          .join(' ');
+        console.log(recommendationInput);
+        const {
+          data: { businessIds },
+        } = await axios.post('http://127.0.0.1:5000/recommend', {
+          input_text: recommendationInput,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const restaurants = await prisma.restaurant.findMany({
+          where: {
+            business_id: {
+              in: businessIds,
+            },
+          },
+        });
+
+        pubsub.publish('RESTAURANTS_RECOMMENDED', {
+          restaurantsRecommended: restaurants,
+          conversationId,
+        });
 
         /**
          * Find ConversationParticipant entity

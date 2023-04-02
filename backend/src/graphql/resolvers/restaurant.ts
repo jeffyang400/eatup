@@ -1,5 +1,6 @@
 import { Restaurant } from '@prisma/client';
 import { GraphQLError } from 'graphql';
+import { withFilter } from 'graphql-subscriptions';
 import { GraphQLContext } from '../../util/types';
 
 const resolvers = {
@@ -48,6 +49,23 @@ const resolvers = {
         console.log('restaurants error: ', error);
         throw new GraphQLError(error?.message);
       }
+    },
+  },
+  Subscription: {
+    restaurantsRecommended: {
+      subscribe: withFilter(
+        (_: any, __: any, context: GraphQLContext) => {
+          const { pubsub } = context;
+          return pubsub.asyncIterator(['RESTAURANTS_RECOMMENDED']);
+        },
+        (
+          payload: any,
+          args: { conversationId: string },
+          context: GraphQLContext
+        ) => {
+          return payload.conversationId === args.conversationId;
+        }
+      ),
     },
   },
 };

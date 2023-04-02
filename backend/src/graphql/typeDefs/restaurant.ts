@@ -47,7 +47,7 @@ const typeDefs = gql`
   }
 
   type Subscription {
-    restaurantCreated: Restaurant!
+    restaurantsRecommended(conversationId: String): [Restaurant]
   }
 `;
 

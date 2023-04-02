@@ -19,13 +19,13 @@ export default function Navbar() {
   return (
     <Box
       as="section"
-      height="5vh"
+      height="3rem"
       borderBottom="1px solid #e8e8e8"
       px={50}
       alignItems="center"
       backgroundColor="#faf2e4"
     >
-      <HStack height="5vh" spacing="10" justify="space-between">
+      <HStack height="3rem" spacing="10" justify="space-between">
         <Flex justify="space-between" flex="1">
           <HStack spacing="8">
             <Link href="/">
