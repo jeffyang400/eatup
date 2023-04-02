@@ -1,0 +1,4 @@
+.feedContainer {
+  display: flex;
+  flex-direction: row;
+}

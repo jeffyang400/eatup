@@ -10,29 +10,26 @@ interface Restaurant {
 }
 
 interface RestaurantCardProps {
-  restaurants: Restaurant[];
+  restaurant: Restaurant;
 }
 
-const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurants }) => {
-  if (!restaurants) {
+const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
+  if (!restaurant) {
     return null;
   }
-  console.log(restaurants[0]);
+
   return (
-    <div className={styles['restaurant-card-container']}>
-      {restaurants.map((restaurant, index) => (
-        <div className={styles['restaurant-card']} key={index}>
-          <div className={styles['restaurant-info']}>
-            <h3 className={styles['restaurant-name']}>{restaurant.name}</h3>
-            <p className={styles['restaurant-categories']}>{restaurant.categories}</p>
-            <p className={styles['restaurant-stars']}>{restaurant.stars}⭐️</p>
-            <p className={styles['restaurant-city']}>{restaurant.city}, CA</p>
-          </div>
-        </div>
-      ))}
+    <div className={styles['restaurant-card']}>
+      <div className={styles['restaurant-info']}>
+        <h3 className={styles['restaurant-name']}>{restaurant.name}</h3>
+        <p className={styles['restaurant-categories']}>
+          {restaurant.categories}
+        </p>
+        <p className={styles['restaurant-stars']}>{restaurant.stars}⭐️</p>
+        <p className={styles['restaurant-city']}>{restaurant.city}, CA</p>
+      </div>
     </div>
   );
 };
 
 export default RestaurantCard;
-

@@ -32,6 +32,15 @@ const RestaurantOperations = {
       }
     `,
   },
+  Subscriptions: {
+    restaurantsRecommended: gql`
+      subscription RestaurantRecommended($conversationId: String!) {
+        restaurantsRecommended(conversationId: $conversationId) {
+          ${RestaurantFields}
+        }
+      }
+    `,
+  },
 };
 
 export default RestaurantOperations;

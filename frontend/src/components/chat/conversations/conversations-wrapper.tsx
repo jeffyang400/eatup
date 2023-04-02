@@ -188,7 +188,7 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
 
   return (
     <Box
-      width={{ base: '100%', md: '400px' }}
+      width={{ base: '100%', md: '25vw' }}
       bg={'gray.50'}
       flexDirection="column"
       gap={4}

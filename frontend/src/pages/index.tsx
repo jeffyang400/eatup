@@ -25,8 +25,10 @@ export default function Home() {
 
   return (
     <Flex justify="center" py={20} flexDirection="column">
-      <div>
-        <RestaurantCard restaurants={data?.restaurants} />
+      <div className={styles.restaurantCardContainer}>
+        {data?.restaurants.map((restaurant: any, idx: any) => (
+          <RestaurantCard key={idx} restaurant={restaurant} />
+        ))}
       </div>
     </Flex>
   );
