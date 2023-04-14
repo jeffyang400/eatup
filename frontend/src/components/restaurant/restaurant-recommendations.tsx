@@ -5,6 +5,7 @@ import RestaurantOperations from '@/graphql/operations/restaurant';
 import { Session } from 'next-auth';
 import styles from '@/styles/restaurants-card.module.css';
 import RestaurantCard from './restaurant-card';
+import Link from 'next/link';
 // import { Restaurant } from '@/util/types';
 
 interface RestaurantRecommendationsProps {
@@ -31,7 +32,9 @@ const RestaurantRecommendations: React.FC<RestaurantRecommendationsProps> = ({
       ) : (
         data?.restaurantsRecommended.map(
           (restaurantRecommended: any, idx: number) => (
-            <RestaurantCard key={idx} restaurant={restaurantRecommended} />
+            <Link key={idx} href={`/restaurant/${restaurantRecommended.id}`} passHref>
+              <RestaurantCard key={idx} restaurant={restaurantRecommended} />
+            </Link>
           )
         )
       )}

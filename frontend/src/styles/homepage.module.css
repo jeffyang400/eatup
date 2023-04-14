@@ -1,0 +1,21 @@
+
+.homeContainer {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+}
+
+.homeContainer h1 {
+  padding-left: 2rem;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.homeRestaurantCards {
+  padding: 4rem;
+  width: 75%;
+}

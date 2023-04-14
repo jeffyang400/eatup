@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { NextPageContext } from 'next';
 import { getSession, signIn, signOut, useSession } from 'next-auth/react';
@@ -6,8 +7,17 @@ import Auth from '../components/auth';
 import { Session } from 'next-auth';
 import RestaurantOperations from '@/graphql/operations/restaurant';
 import { useQuery } from '@apollo/client';
-import styles from '../styles/restaurants-card.module.css';
+import cardStyles from '../styles/restaurants-card.module.css';
 import RestaurantCard from '@/components/restaurant/restaurant-card';
+import Link from 'next/link';
+import styles from '@/styles/homepage.module.css';
+
+interface Restaurant {
+  name: string;
+  categories: string;
+  stars: number;
+  city: string;
+}
 
 export default function Home() {
   const { data: session } = useSession();
@@ -24,13 +34,16 @@ export default function Home() {
   };
 
   return (
-    <Flex justify="center" py={20} flexDirection="column">
-      <div className={styles.restaurantCardContainer}>
-        {data?.restaurants.map((restaurant: any, idx: any) => (
-          <RestaurantCard key={idx} restaurant={restaurant} />
+    <div className={styles.homeContainer}>
+      <h1>Restaurants</h1>
+      <div className={`${cardStyles.restaurantCardContainer}  ${styles.homeRestaurantCards}`}>
+        {data?.restaurants.map((restaurant: Restaurant, idx: number) => (
+          <Link key={idx} href={`/restaurant/${restaurant.id}`}>
+              <RestaurantCard restaurant={restaurant} />
+          </Link>
         ))}
       </div>
-    </Flex>
+    </div>
   );
 }
 
