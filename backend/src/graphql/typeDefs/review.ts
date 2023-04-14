@@ -7,25 +7,23 @@ const typeDefs = gql`
     rating: Float
     createdAt: Date
     updatedAt: Date
-    user: User!
-    restaurant: Restaurant!
+    user: User
+    restaurant: Restaurant
   }
 
   type Query {
     allReviews: [Review]
-    reviewsByRestaurant(restaurantId: String): [Review]
+    reviewsForRestaurant(restaurantId: String!): [Review]
     reviewsByUser(userId: String): [Review]
   }
 
-  input CreateReviewInput {
-    content: String!
-    rating: Float!
-    userId: String!
-    restaurantId: String!
-  }
-
   type Mutation {
-    createReview(data: CreateReviewInput!): Review!
+    createReview(
+      restaurantId: String!
+      userId: String!
+      content: String!
+      rating: Float!
+    ): Review!
   }
 
   type Subscription {

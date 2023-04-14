@@ -3,6 +3,7 @@ import conversationResolvers from './conversation';
 import messageResolvers from './message';
 import scalarResolvers from './scalars';
 import restaurantResolvers from './restaurant';
+import reviewResolvers from './review';
 import merge from 'lodash.merge';
 
 const resolvers = merge(
@@ -11,7 +12,8 @@ const resolvers = merge(
   conversationResolvers,
   messageResolvers,
   scalarResolvers,
-  restaurantResolvers
+  restaurantResolvers,
+  reviewResolvers
 );
 
 export default resolvers;

@@ -40,7 +40,7 @@ const FeedWrapper: React.FC<FeedWrapperProps> = ({ session }) => {
             <MessageInput session={session} conversationId={conversationId} />
           </>
         ) : (
-          <div>No Convo Selected</div>
+          <div>No Chat Selected</div>
         )}
       </Flex>
       {conversationId && typeof conversationId === 'string' && (

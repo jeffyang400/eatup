@@ -1,0 +1,93 @@
+.reviewFormContainer {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  margin: 10 auto;
+  background-color: #fefefe;
+  border-radius: 20px;
+  border: 1px solid #e7e7e7;
+  width: 800px;
+  padding: 1em;
+}
+
+.reviewForm {
+  width: 100%;
+}
+
+.reviewFormTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.reviewFormField {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.reviewFormField label {
+  font-size: 18px;
+  width: 100%;
+}
+
+.reviewFormField input,
+.reviewFormField textarea {
+  border: 1px solid #d3d3d3;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.reviewFormField textarea:focus {
+  outline: none;
+}
+
+.reviewFormField input:focus {
+  outline: none;
+}
+
+.reviewFormField textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.reviewFormButton {
+  background-color: #f8f8f8;
+  color: #333;
+  font-size: 18px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.reviewFormButton:hover {
+  background-color: #e0e0e0;
+}
+
+.review {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+}
+
+.review h3 {
+  font-size: 18px;
+  margin-top: 0;
+}
+
+.review p {
+  margin: 0;
+}
+
+.review p:not(:last-child) {
+  margin-bottom: 5px;
+}
+
