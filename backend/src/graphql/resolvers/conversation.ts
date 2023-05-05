@@ -48,6 +48,39 @@ const resolvers = {
         throw new GraphQLError(error?.message);
       }
     },
+    conversation: async (
+      _: any,
+      args: { conversationId: string },
+      context: GraphQLContext
+    ): Promise<ConversationPopulated> => {
+      const { session, prisma } = context;
+      const { conversationId } = args;
+
+      if (!session?.user) {
+        throw new GraphQLError('Not authorized');
+      }
+
+      const {
+        user: { id: userId },
+      } = session;
+
+      const conversation = await prisma.conversation.findUnique({
+        where: {
+          id: conversationId,
+        },
+        include: conversationPopulated,
+      });
+
+      if (!conversation) {
+        throw new GraphQLError('Conversation not found');
+      }
+
+      if (!userIsConversationParticipant(conversation.participants, userId)) {
+        throw new GraphQLError('Not authorized');
+      }
+
+      return conversation;
+    }
   },
   Mutation: {
     createConversation: async (
@@ -159,6 +192,36 @@ const resolvers = {
 
         pubsub.publish('CONVERSATION_DELETED', {
           conversationDeleted: deletedConversation,
+        });
+      } catch (error: any) {
+        console.log('deleteConversation error: ', error);
+        throw new GraphQLError(error?.message);
+      }
+      return true;
+    },
+    resetConversationRecommendations: async function (
+      _: any,
+      args: { conversationId: string },
+      context: GraphQLContext
+    ): Promise<boolean> {
+      const { session, prisma, pubsub } = context;
+      const { conversationId } = args;
+
+      if (!session?.user) {
+        throw new GraphQLError('Not authorized');
+      }
+
+      try {
+        await prisma.conversation.update({
+          where: { id: conversationId },
+          data: {
+            recommendationStartDate: new Date().toISOString(),
+          },
+        });
+
+        pubsub.publish('RESTAURANTS_RECOMMENDED', {
+          restaurantsRecommended: [],
+          conversationId,
         });
       } catch (error: any) {
         console.log('deleteConversation error: ', error);

@@ -3,7 +3,7 @@
 .restaurant-recommendation-container h1 {
   font-size: 20px;
   font-weight: bold;
-  margin: 0 0 16px;
+  margin: 0 0 0px;
 }
 
 .restaurant-recommendation-container {
@@ -13,6 +13,7 @@
   padding: 16px;
   width: 25vw;
   border-left: 1px solid #e6e6e6;
+  justify-content: space-between;
 }
 
 .restaurant-card-container {

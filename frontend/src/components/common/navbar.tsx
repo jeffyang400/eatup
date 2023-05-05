@@ -41,7 +41,6 @@ export default function Navbar() {
           <HStack spacing="3">
             {session && (
               <ButtonGroup>
-                <Button variant="ghost">Profile</Button>
                 <Button variant="ghost" onClick={() => signOut()}>
                   Sign out
                 </Button>

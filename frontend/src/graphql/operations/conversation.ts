@@ -13,6 +13,7 @@ const ConversationFields = `
       latestMessage {
         ${MessageFields}
       }
+      recommendationStartDate
       updatedAt
 `;
 
@@ -47,6 +48,11 @@ const ConversationOperations = {
         markConversationAsRead(userId: $userId, conversationId: $conversationId)
       }
     `,
+    resetConversationRecommendations: gql`
+      mutation ResetConversationRecommendations($conversationId: String!) {
+        resetConversationRecommendations(conversationId: $conversationId)
+      }
+    `,
   },
   Subscriptions: {
     conversationCreated: gql`
@@ -71,7 +77,7 @@ const ConversationOperations = {
           id
         }
       }
-    `
+    `,
   },
 };
 

@@ -15,6 +15,10 @@ const typeDefs = gql`
     deleteConversation(conversationId: String!): Boolean
   }
 
+  type Mutation {
+    resetConversationRecommendations(conversationId: String!): Boolean
+  }
+
   type CreateConversationResponse {
     conversationId: String
   }
@@ -31,6 +35,7 @@ const typeDefs = gql`
     id: String
     latestMessage: Message
     participants: [Participant]
+    recommendationStartDate: Date
     createdAt: Date
     updatedAt: Date
   }
@@ -43,6 +48,10 @@ const typeDefs = gql`
 
   type Query {
     conversations: [Conversation]
+  }
+
+  type Query {
+    conversation(conversationId: String!): Conversation
   }  
 
   type Subscription {
