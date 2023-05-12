@@ -8,11 +8,13 @@ Clone this repository.
 ***
 
 ### Recommendation Engine
-1. Navigate to the `Recommendation_model` directory.
+1. Get the Recomendation_model from this link: https://drive.google.com/drive/folders/1xamB5ZXr5_GAFu30MKD_8GuAzEPznhhX?usp=sharing. 
+2. Navigate to the `Recommendation_model` directory.
 ```
 cd Recommendation_model
 ```
-2. Start the Flask server by running:
+3. Add the Recommendation_model to the directory.
+4. Start the Flask server by running:
 ```
 python3 server.py
 ```
