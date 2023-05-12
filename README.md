@@ -14,7 +14,11 @@ Clone this repository.
 cd Recommendation_model
 ```
 3. Add the Recommendation_model to the directory.
-4. Start the Flask server by running:
+4. Install dependencies:
+```
+pip install -r requirements.txt
+```
+5. Start the Flask server by running:
 ```
 python3 server.py
 ```
