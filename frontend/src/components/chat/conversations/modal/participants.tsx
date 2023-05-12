@@ -8,7 +8,6 @@ interface ParticipantsProps {
 }
 
 const Participants: React.FC<ParticipantsProps> = ({ participants, removeParticipant }) => {
-  console.log('PARTICIPANTS', participants);
   
   return (
     <Flex mt={8} gap="10px" flexWrap="wrap">

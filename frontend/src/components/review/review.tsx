@@ -4,7 +4,7 @@ import styles from '@/styles/review-form.module.css';
 function Review({ review }: { review: any }) {
   const { content, rating, createdAt, user } = review;
 
-  console.log(user);
+
   
 
   return (

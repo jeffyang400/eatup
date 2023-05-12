@@ -26,7 +26,6 @@ export default function Home() {
     RestaurantOperations.Queries.restaurants
   );
 
-  console.log('restaurant data', data);
 
   const reloadSession = async () => {
     const event = new Event('visibilitychange');

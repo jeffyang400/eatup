@@ -38,7 +38,6 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
       updateQuery: (prev, { subscriptionData }: MessageSubscriptionData) => {
         if (!subscriptionData) return prev;
 
-        console.log('subscription data:', subscriptionData);
 
         const newMessage = subscriptionData.data.messageSent;
 

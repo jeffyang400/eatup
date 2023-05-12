@@ -99,7 +99,6 @@ export default function Restaurant() {
 
   const restaurant = restData.restaurant;
 
-  console.log('Reviews:', reviewData, reviewError, reviewLoading);
 
   return (
     <div className={styles.restaurant}>

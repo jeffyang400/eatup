@@ -8,7 +8,6 @@ import { Session } from 'next-auth';
 export default function Chats() {
   const { data: session } = useSession();
 
-  console.log('session: ', session);
 
   const reloadSession = async () => {
     const event = new Event('visibilitychange');

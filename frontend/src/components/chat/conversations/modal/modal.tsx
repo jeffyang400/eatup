@@ -58,7 +58,6 @@ const ConversationModal: React.FC<ModalProps> = ({
       ConversationOperations.Mutations.createConversation
     );
 
-  console.log('SEARCH DATA', data);
 
   const onCreateConversation = async () => {
     const participantIds = [...participants.map((p) => p.id), userId];
@@ -94,7 +93,6 @@ const ConversationModal: React.FC<ModalProps> = ({
   const onSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     searchUsers({ variables: { username } });
-    console.log('IN ON SUBMIT', username);
   };
 
   const addParticipant = (user: SearchedUser) => {

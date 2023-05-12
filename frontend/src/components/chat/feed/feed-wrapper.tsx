@@ -44,7 +44,7 @@ const FeedWrapper: React.FC<FeedWrapperProps> = ({ session }) => {
         )}
       </Flex>
       {conversationId && typeof conversationId === 'string' && (
-        <RestaurantRecommendations conversationId={conversationId} />
+        <RestaurantRecommendations key={conversationId} conversationId={conversationId} />
       )}
     </div>
   );

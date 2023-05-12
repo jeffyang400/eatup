@@ -63,7 +63,7 @@ const resolvers = {
           const recommendationInput = filteredMessages
             .map((message) => message.body)
             .join(' ');
-          console.log(recommendationInput);
+
           const {
             data: { businessIds },
           } = await axios.post('http://127.0.0.1:5000/recommend', {
@@ -194,7 +194,7 @@ const resolvers = {
         const recommendationInput = messages
           .map((message) => message.body)
           .join(' ');
-        console.log(recommendationInput);
+
         const {
           data: { businessIds },
         } = await axios.post('http://127.0.0.1:5000/recommend', {

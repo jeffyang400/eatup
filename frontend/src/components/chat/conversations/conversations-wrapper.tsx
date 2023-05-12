@@ -67,7 +67,7 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
     ConversationOperations.Subscriptions.conversationDeleted,
     {
       onData: ({ client, data }) => {
-        console.log('SUB data: ', data);
+
         const { data: subscriptionData } = data;
         if (!subscriptionData) return;
 
