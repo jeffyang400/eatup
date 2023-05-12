@@ -2,7 +2,7 @@ import pickle as pkl
 
 def load_model():
 
-  pickle_path = '../eatUp_full_set_recommendation.pkl'
+  pickle_path = 'eatUp_full_set_recommendation.pkl'
       
   with open(pickle_path, 'rb') as file:
       P = pkl.load(file)

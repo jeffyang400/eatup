@@ -34,12 +34,16 @@ cd backend
 ```
 npm install
 ```
-3. Create `.env` in `backend` directory. It must contain the URI for your MongoDB database. Also, set `CLIENT_ORIGIN`.
+3. Generate Prisma client:
+```
+npx prisma generate --schema=src/prisma/schema.prisma
+```
+4. Create `.env` in `backend` directory. It must contain the URI for your MongoDB database. Also, set `CLIENT_ORIGIN`.
 ```
 CLIENT_ORIGIN=http://localhost:3000
 MONGODB_URI=your_mongo_uri
 ```
-4. Start the server:
+5. Start the server:
 ```
 npm run dev
 ```
@@ -56,7 +60,11 @@ cd frontend
 ```
 npm install
 ```
-3. To set up environment variables, create `.env.local` in `frontend` directory: 
+3. Generate Prisma client:
+```
+npx prisma generate --schema=src/prisma/schema.prisma
+```
+4. To set up environment variables, create `.env.local` in `frontend` directory: 
 ```
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_nextauth_secret
@@ -67,13 +75,13 @@ MONGODB_URI=your_mongo_uri
 Enter a random string for `NEXTAUTH_SECRET`. Use the MONGODB_URI for your database. You can get `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` by creating a new project in [Google Cloud Console](https://console.cloud.google.com/).
 
 
-4. Create a new OAuth 2.0 Client ID:  
+5. Create a new OAuth 2.0 Client ID:  
     1. On the Google Cloud Project, go to APIs & Services > Credentials. Click 'Create Credentials > OAuth client ID'.
     2. Add `http://localhost:3000` to Authorized JavaScript origins.
     3. Add `http://localhost:3000/api/auth/callback/google` to Authorized redirect URIs.
     4. Copy the client ID and client secret to `.env.local`.
 
-5. Start the client:
+6. Start the client:
 ```
 npm run dev
 ```
