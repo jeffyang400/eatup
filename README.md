@@ -18,7 +18,11 @@ cd Recommendation_model
 ```
 pip install -r requirements.txt
 ```
-5. Start the Flask server by running:
+5. Download stopwords:
+```
+python3 -m nltk.downloader stopwords
+```
+6. Start the Flask server by running:
 ```
 python3 server.py
 ```
