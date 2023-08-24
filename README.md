@@ -1,6 +1,6 @@
 # Eatup - Social Media for Food
 **SJSU Capstone Project**
-https://github.com/billsasi/eatup
+Main: https://github.com/billsasi/eatup
 
 ## Setup
 Clone this repository.
